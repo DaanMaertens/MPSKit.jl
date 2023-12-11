@@ -1,6 +1,6 @@
 #https://arxiv.org/pdf/1901.05824.pdf
 
-@with_kw struct WII <: Algorithm
+@kwdef struct WII <: Algorithm
     tol::Float64 = Defaults.tol
     maxiter::Int = Defaults.maxiter
 end
@@ -103,7 +103,7 @@ function make_time_mpo(th::MPOHamiltonian{S,T,E},dt,alg::TaylorCluster{N}) where
 
             slice[:,inds[transformed...]] += slice[:,inds[tc...]]*τ^n * factorial(N-n)/factorial(N);
 
-            slice[:,inds[tc...]] .*=0;
+            slice[:,inds[tc...]] .*= 0;
             slice[inds[tc...],:] .*= 0
         end
     end
