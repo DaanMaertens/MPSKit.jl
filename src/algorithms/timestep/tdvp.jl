@@ -164,7 +164,7 @@ function timestep!(Ψ::AbstractFiniteMPS, H, t::Number, dt::Number, alg::TDVP2,
         ac2 = _transpose_front(Ψ.AL[i - 1]) * _transpose_tail(Ψ.AC[i])
 
         h_ac2 = ∂∂AC2(i - 1, Ψ, H, envs)
-        (nac2, converged, convhist) = integrate(h_ac2, ac2, t, -1im, dt / 2, alg.integrator)
+        (nac2, converged, convhist) = integrate(h_ac2, ac2, t + dt / 2, -1im, dt / 2, alg.integrator)
         converged == 0 &&
                 @info "time evolving ac2($i) failed $(convhist.normres)"
 
@@ -174,7 +174,7 @@ function timestep!(Ψ::AbstractFiniteMPS, H, t::Number, dt::Number, alg::TDVP2,
         Ψ.AC[i] = (complex(nc), _transpose_front(nar))
 
         if i != 2
-            Ψ.AC[i - 1], converged, convhist = integrate(∂∂AC(i - 1, Ψ, H, envs), Ψ.AC[i - 1], t, 1im, dt / 2,
+            Ψ.AC[i - 1], converged, convhist = integrate(∂∂AC(i - 1, Ψ, H, envs), Ψ.AC[i - 1], t + dt / 2, 1im, dt / 2,
                                         alg.integrator)
             converged == 0 &&
                 @info "time evolving ac($i) failed $(convhist.normres)"
